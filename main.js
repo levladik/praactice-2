@@ -2,12 +2,12 @@ const tableBody = document.querySelector('.table-body');
 const userCardTemplate = document.querySelector('.data-user-table');
 const userCardContainer = document.querySelector('.data-user-cards-container');
 const searchInput = document.querySelector('.data-search');
+let value;
 
 let users = [];
 
-searchInput.addEventListener('input', event => {
-	const value = event.target.value.toLowerCase();
-	if (value.length >= 3) {
+const search = () => {
+		if (value.length >= 3) {
 		users.forEach(user => {
 			const isVisible =
 				user.id.toString().toLowerCase().includes(value) ||
@@ -22,6 +22,11 @@ searchInput.addEventListener('input', event => {
 			user.element.classList.remove('hide');
 		})
 	}
+}
+	
+searchInput.addEventListener('input', event => {
+	value = event.target.value.toLowerCase();
+	search();
 })
 
 fetch('https://jsonplaceholder.typicode.com/posts')
@@ -48,7 +53,7 @@ fetch('https://jsonplaceholder.typicode.com/posts')
 				return { userId: user.userId, id: user.id, title: user.title, body: user.body, element: card };
 			})
 		}
-
+		
 		renderRows();
 		//Listening Click on Column Titles
 		const userIdHeader = document.querySelector('.user-id-header');
@@ -63,7 +68,7 @@ fetch('https://jsonplaceholder.typicode.com/posts')
 
 		//Sorting
 		const sortByUserId = () => {
-			data.sort((a, b) => {
+			let sortusers = data.sort((a, b) => {
 				if (isSortingByUserIdAscend) {
 					return a.userId - b.userId;
 				} else {
@@ -72,6 +77,7 @@ fetch('https://jsonplaceholder.typicode.com/posts')
 			});
 			isSortingByUserIdAscend = !isSortingByUserIdAscend;
 			renderRows();
+			search();
 		}
 
 		const sortById = () => {
@@ -84,6 +90,7 @@ fetch('https://jsonplaceholder.typicode.com/posts')
 			})
 			isSortingByIdAscend = !isSortingByIdAscend;
 			renderRows();
+			search();
 		}
 
 		const sortByTitle = () => {
@@ -97,6 +104,7 @@ fetch('https://jsonplaceholder.typicode.com/posts')
 			})
 			isSortingByTitleAscend = !isSortingByTitleAscend;
 			renderRows();
+			search();
 		}
 
 		const sortByMessage = () => {
@@ -109,6 +117,7 @@ fetch('https://jsonplaceholder.typicode.com/posts')
 			})
 			isSortingByMessageAscend = !isSortingByMessageAscend;
 			renderRows();
+			search();
 		}
 
 		userIdHeader.addEventListener('click', sortByUserId);
